@@ -1,0 +1,271 @@
+/* eslint-disable */
+
+const colors = require('tailwindcss/colors');
+const plugin = require('tailwindcss/plugin');
+
+const rem = (val = 1) => `${val * 16}px`; // convert to px, based on 16px
+const px = (val = 1) => `${val}px`;
+
+// console.log('tailwind mode', process.env.TAILWIND_MODE);
+
+module.exports = {
+  prefix: 'tw-',
+  mode: 'jit',
+  purge: [
+    // uncomment this line if we use jit mode
+    'src/**/*.{vue,js,ts}',
+  ],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {},
+
+    screens: {
+      // sm: '768px',
+      // md: '992px',
+      // lg: '1200px',
+      // xl: '1280px',
+      // '2xl': '1536px',
+    },
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+
+      black: colors.black,
+      white: colors.white,
+
+      primary: {
+        4: '#4ca5fe',
+        DEFAULT: '#3398fe',
+        5: '#198bfe',
+      },
+      success: '#67C23A',
+      warning: '#E6A23C',
+      error: '#F56C6C',
+      info: '#909399',
+      // default: '#d9d9d9',
+
+      creatorYellow: '#fd942b',
+
+      gray: {
+        1: '#fcfcfc',
+        2: '#f0f0f0',
+        3: '#e6e6e6',
+        4: '#808080',
+        5: '#333333',
+      },
+
+      // todo: 进一步规整
+      icon: {
+        dark: '#cedcea',
+        light: '#e5ecf4',
+      },
+      // red: colors.red,
+      // yellow: colors.amber,
+      // green: colors.emerald,
+      // blue: colors.blue,
+      // indigo: colors.indigo,
+      // purple: colors.violet,
+      // pink: colors.pink,
+    },
+    spacing: {
+      px: '1px',
+      0: '0px',
+      0.5: rem(0.125),
+      1: rem(0.25),
+      1.5: rem(0.375),
+      2: rem(0.5),
+      2.5: rem(0.625),
+      3: rem(0.75),
+      3.5: rem(0.875),
+      4: rem(1),
+      5: rem(1.25),
+      6: rem(1.5),
+      7: rem(1.75),
+      8: rem(2),
+      9: rem(2.25),
+      10: rem(2.5),
+      11: rem(2.75),
+      12: rem(3),
+      14: rem(3.5),
+      15: rem(3.75),
+      16: rem(4),
+      18: rem(4.5),
+      20: rem(5),
+      24: rem(6),
+      28: rem(7),
+      32: rem(8),
+      36: rem(9),
+      40: rem(10),
+      44: rem(11),
+      48: rem(12),
+      52: rem(13),
+      56: rem(14),
+      60: rem(15),
+      64: rem(16),
+      72: rem(18),
+      80: rem(20),
+      96: rem(24),
+    },
+
+    borderColor: (theme) => ({
+      // ...theme('colors'),
+      'gray-1': '#DCDFE6',
+      'gray-2': '#E4E7ED',
+      'gray-3': '#EBEEF5',
+      'gray-4': '#F2F6FC',
+      DEFAULT: theme('#DCDFE6', 'currentColor'),
+    }),
+
+    fontSize: {
+      '2xs': [rem(0.625)],
+      xs: [rem(0.75), { lineHeight: rem(1) }],
+      sm: [rem(0.875), { lineHeight: rem(1.25) }],
+      base: [rem(1), { lineHeight: rem(1.5) }],
+      lg: [rem(1.125), { lineHeight: rem(1.75) }],
+      xl: [rem(1.25), { lineHeight: rem(1.75) }],
+      '2xl': [rem(1.5), { lineHeight: rem(2) }],
+      '3xl': [rem(1.875), { lineHeight: rem(2.25) }],
+      '4xl': [rem(2.25), { lineHeight: rem(2.5) }],
+      '5xl': [rem(3), { lineHeight: '1' }],
+      '6xl': [rem(3.75), { lineHeight: '1' }],
+      // '7xl': [rem(4.5), { lineHeight: '1' }],
+      // '8xl': [rem(6), { lineHeight: '1' }],
+      // '9xl': [rem(8), { lineHeight: '1' }],
+    },
+    fontWeight: {
+      // thin: '100',
+      // extralight: '200',
+      light: '300',
+      normal: '400',
+      medium: '500',
+      semibold: '600',
+      bold: '700',
+      // extrabold: '800',
+      // black: '900',
+    },
+
+    height: (theme) => ({
+      auto: 'auto',
+      ...theme('spacing'),
+      '1/2': '50%',
+      '1/3': '33.333333%',
+      '2/3': '66.666667%',
+      '1/4': '25%',
+      '2/4': '50%',
+      '3/4': '75%',
+      '1/5': '20%',
+      '2/5': '40%',
+      '3/5': '60%',
+      '4/5': '80%',
+      '1/6': '16.666667%',
+      '2/6': '33.333333%',
+      '3/6': '50%',
+      '4/6': '66.666667%',
+      '5/6': '83.333333%',
+      full: '100%',
+      screen: '100vh',
+    }),
+    inset: (theme, { negative }) => ({
+      auto: 'auto',
+      0: '0',
+      ...theme('spacing'),
+      ...negative(theme('spacing')),
+      '1/2': '50%',
+      '1/3': '33.333333%',
+      '2/3': '66.666667%',
+      '1/4': '25%',
+      '2/4': '50%',
+      '3/4': '75%',
+      full: '100%',
+      '-1/2': '-50%',
+      '-1/3': '-33.333333%',
+      '-2/3': '-66.666667%',
+      '-1/4': '-25%',
+      '-2/4': '-50%',
+      '-3/4': '-75%',
+      '-full': '-100%',
+    }),
+
+    maxWidth: (theme, { breakpoints }) => ({
+      none: 'none',
+      0: rem(0),
+      // xs: rem(20),
+      // sm: rem(24),
+      // md: rem(28),
+      // lg: rem(32),
+      // xl: rem(36),
+      // '2xl': rem(42),
+      // '3xl': rem(48),
+      // '4xl': rem(56),
+      // '5xl': rem(64),
+      // '6xl': rem(72),
+      // '7xl': rem(80),
+      full: '100%',
+      min: 'min-content',
+      max: 'max-content',
+      prose: '65ch',
+      ...breakpoints(theme('screens')),
+    }),
+
+    order: {
+      first: '-9999',
+      last: '9999',
+      none: '0',
+      1: '1',
+      2: '2',
+      3: '3',
+      4: '4',
+      5: '5',
+      6: '6',
+      7: '7',
+      8: '8',
+      // 9: '9',
+      // 10: '10',
+      // 11: '11',
+      // 12: '12',
+    },
+
+    rotate: {
+      '-180': '-180deg',
+      '-90': '-90deg',
+      '-45': '-45deg',
+      // '-12': '-12deg',
+      // '-6': '-6deg',
+      // '-3': '-3deg',
+      // '-2': '-2deg',
+      // '-1': '-1deg',
+      0: '0deg',
+      // 1: '1deg',
+      // 2: '2deg',
+      // 3: '3deg',
+      // 6: '6deg',
+      // 12: '12deg',
+      45: '45deg',
+      90: '90deg',
+      180: '180deg',
+    },
+  },
+  variants: {
+    extend: {},
+
+    cursor: ['responsive', 'hover'],
+  },
+  plugins: [
+    // https://tailwindcss.com/docs/plugins#adding-utilities
+    plugin(({ addUtilities, addComponents, e, prefix, config }) => {
+      addUtilities({
+        '.absolute-center': {
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        },
+      });
+    }),
+  ],
+  corePlugins: {
+    // todo: 部分 border 属性需要引入 tailwindcss/base 来支持。暂时关闭
+    borderWidth: false,
+    borderOpacity: false,
+  },
+};
