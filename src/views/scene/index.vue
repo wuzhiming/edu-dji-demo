@@ -66,7 +66,8 @@
       >
         <template #default="{}">
           <iframe
-            src="https://docs.cocos.com/ice/manual/zh/"
+            id="iceWindow"
+            src="https://demo-edu.cocos.com/dji-demo/index.html"
             class="ice-webview-layout__view"
             style=""
           />
@@ -76,21 +77,29 @@
 
     <footer class="ice-scene__footer ice-scene-footer">
       <div class="tw-flex tw-items-center">
-        <button class="button is-small is-white">
+        <button class="button is-small is-white"
+                @click="firstClick"
+        >
           <StepBackwardOutlined />
         </button>
 
-        <button class="button is-small is-white">
+        <button class="button is-small is-white"
+                @click="preClick"
+        >
           <CaretLeftOutlined />
         </button>
 
         <input type="text">
 
-        <button class="button is-small is-white">
+        <button class="button is-small is-white"
+                @click="nextClick"
+        >
           <CaretRightOutlined />
         </button>
 
-        <button class="button is-small is-white">
+        <button class="button is-small is-white"
+                @click="lastClick"
+        >
           <StepForwardOutlined />
         </button>
       </div>
@@ -102,6 +111,7 @@
 import { defineComponent, ref } from 'vue';
 
 import MiniContainer from './mini-container.vue';
+import { iFrameBridge } from '@/sync/IFrameBridge';
 
 export default defineComponent({
   name: 'MainScene',
@@ -120,6 +130,22 @@ export default defineComponent({
       expandedRight.value = !expandedRight.value;
     };
 
+    const preClick = () => {
+      iFrameBridge.prePage();
+    };
+
+    const nextClick = () => {
+      iFrameBridge.nextPage();
+    };
+
+    const lastClick = () => {
+      iFrameBridge.goPage(iFrameBridge.pageInfo.total);
+    };
+
+    const firstClick = () => {
+      iFrameBridge.goPage(1);
+    };
+
     const getMainEl = () => mainEl.value;
 
     return {
@@ -129,6 +155,10 @@ export default defineComponent({
 
       expandedRight,
       onExpandClick,
+      preClick,
+      nextClick,
+      lastClick,
+      firstClick,
     };
   },
 });
@@ -191,3 +221,5 @@ export default defineComponent({
   }
 }
 </style>
+
+
