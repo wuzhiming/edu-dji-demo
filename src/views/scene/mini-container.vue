@@ -1,20 +1,32 @@
 <template>
   <div
     ref="rootEl"
-    class="mini-wrap"
+    class="mini-container"
     :class="rootElClass"
     :style="dragElStyle"
   >
-    <slot />
+    <slot :dragging="isDragging" />
 
     <div
       ref="dragEl"
-      class="mini-wrap__ctrl"
+      class="mini-container__ctrl mini-container-ctrl"
     >
-      <button class="">
+      <button
+        class="button is-dark is-size-5 mini-container-ctrl__expand"
+        @click="onExpandClick"
+      >
         <FullscreenOutlined />
       </button>
     </div>
+
+    <teleport to="body">
+      <div
+        class="mini-container-mask"
+        :style="{
+          display: isDragging ? 'block' : 'none',
+        }"
+      />
+    </teleport>
   </div>
 </template>
 
@@ -37,11 +49,11 @@ export default defineComponent({
     // 小窗的宽、高
     width: {
       type: [Number],
-      default: 400,
+      default: 500,
     },
     height: {
       type: [Number],
-      default: 200,
+      default: 300,
     },
 
     getDragContainer: {
@@ -49,7 +61,9 @@ export default defineComponent({
       default: getDefaultDragContainer,
     },
   },
-  emits: {},
+  emits: {
+    'update:minimized': null,
+  },
 
   setup(props, ctx) {
     const dragEl = ref<HTMLElement | null>(null);
@@ -133,6 +147,10 @@ export default defineComponent({
       return {};
     });
 
+    const onExpandClick = () => {
+      ctx.emit('update:minimized', false);
+    };
+
     onMounted(() => {
       calcPositionLimits();
     });
@@ -146,46 +164,69 @@ export default defineComponent({
 
       rootElClass,
       dragElStyle,
+
+      onExpandClick,
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.mini-wrap {
+$prefixCls: mini-container;
+$z-index: 2;
+
+.#{$prefixCls} {
   // position: relative;
 
   &.minimized {
     position: fixed;
+    z-index: $z-index;
   }
 
   &.minimized:hover,
   &.dragging {
-    .mini-wrap__ctrl {
+    .#{$prefixCls}__ctrl {
       display: block;
     }
   }
 
-  &__ctrl-wrap {
-    position: relative;
+  // 作用在全局的 mask，拖动时遮挡页面上的其它元素，避免干扰 pointer events
+  &-mask {
+    position: fixed;
+    z-index: $z-index - 1;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+
+    opacity: 0;
   }
 
   &__ctrl {
     display: none;
-
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
 
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
+  }
+
+  &-ctrl {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
 
     &:hover {
       cursor: move;
+    }
+
+    &__expand {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+
+      padding: 8px;
+      height: auto;
     }
   }
 }

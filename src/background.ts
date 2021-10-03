@@ -38,8 +38,8 @@ function createWindow() {
       webviewTag: true,
     },
 
-    minimizable: false,
-    maximizable: false,
+    minWidth: 640,
+    minHeight: 480,
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {

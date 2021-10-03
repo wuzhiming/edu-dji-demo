@@ -32,4 +32,8 @@ body,
 
   overflow: hidden;
 }
+
+html {
+  overflow: hidden;
+}
 </style>

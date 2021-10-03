@@ -1,30 +1,12 @@
 <template>
   <div class="ice-scene">
-    <header class="ice-scene__header ice-scene-header">
-      <button class="button is-small is-white">
-        <LeftOutlined />
-      </button>
-
-      <div class="tw-flex-1 tw-text-center">
-        {{ 'title222' }}
-      </div>
-
-      <button
-        class="button is-small is-white tw-mr-2"
-        @click="minimizeMain = !minimizeMain"
-      >
-        <FullscreenOutlined v-if="minimizeMain" />
-        <FullscreenExitOutlined v-else />
-      </button>
-
-      <button
-        class="button is-small is-white"
-        @click="onExpandClick"
-      >
-        <MenuFoldOutlined v-if="!expandedRight" />
-        <MenuUnfoldOutlined v-else />
-      </button>
-    </header>
+    <SceneHeader
+      v-model:minimized="minimizeMain"
+      v-model:expanded="expandedRight"
+      class="ice-scene__header"
+    >
+      <!--  -->
+    </SceneHeader>
 
     <main
       ref="mainEl"
@@ -41,7 +23,7 @@
           >
             <iframe
               src="https://edu.dji.com/CodeMaster/index.html?t=121#/?type=tello"
-              class="ice-webview-layout__view"
+              class="ice-scene-webview__view"
             />
           </div>
 
@@ -52,7 +34,7 @@
           >
             <iframe
               src="https://www.cocos.com"
-              class="ice-webview-layout__view"
+              class="ice-scene-webview__view"
               style=""
             />
           </div>
@@ -60,50 +42,30 @@
       </div>
 
       <MiniContainer
+        v-model:minimized="minimizeMain"
         :get-drag-container="getMainEl"
-        :minimized="minimizeMain"
         class="ice-scene-webview"
       >
         <template #default="{}">
           <iframe
             id="iceWindow"
             src="https://demo-edu.cocos.com/dji-demo/index.html"
-            class="ice-webview-layout__view"
+            class="ice-scene-webview__view"
             style=""
           />
         </template>
       </MiniContainer>
     </main>
 
-    <footer class="ice-scene__footer ice-scene-footer">
-      <div class="tw-flex tw-items-center">
-        <button class="button is-small is-white"
-                @click="firstClick"
-        >
-          <StepBackwardOutlined />
-        </button>
-
-        <button class="button is-small is-white"
-                @click="preClick"
-        >
-          <CaretLeftOutlined />
-        </button>
-
-        <input type="text">
-
-        <button class="button is-small is-white"
-                @click="nextClick"
-        >
-          <CaretRightOutlined />
-        </button>
-
-        <button class="button is-small is-white"
-                @click="lastClick"
-        >
-          <StepForwardOutlined />
-        </button>
-      </div>
-    </footer>
+    <SceneNav
+      class="ice-scene__nav"
+      @previous="preClick"
+      @stepBackward="firstClick"
+      @next="nextClick"
+      @stepForward="lastClick"
+    >
+      <!--  -->
+    </SceneNav>
   </div>
 </template>
 
@@ -111,12 +73,18 @@
 import { defineComponent, ref } from 'vue';
 
 import MiniContainer from './mini-container.vue';
+
 import { iFrameBridge } from '@/sync/IFrameBridge';
+
+import SceneNav from './nav.vue';
+import SceneHeader from './header.vue';
 
 export default defineComponent({
   name: 'MainScene',
   components: {
     MiniContainer,
+    SceneNav,
+    SceneHeader,
   },
   props: {},
   emits: {},
@@ -169,8 +137,9 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
 
-  &__header,
-  &__footer {
+  position: relative;
+
+  &__header {
     flex: none;
   }
 
@@ -179,14 +148,15 @@ export default defineComponent({
     min-width: 0;
     min-height: 0;
   }
-}
 
-.ice-scene-header {
-  @apply tw-flex tw-items-center  tw-py-4 tw-px-4 tw-bg-gray-2;
-}
+  &__nav {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translate(-50%, 0);
 
-.ice-scene-footer {
-  @apply tw-flex tw-items-center tw-justify-center tw-px-4 tw-py-2;
+    z-index: 99;
+  }
 }
 
 .ice-scene-main {
@@ -203,17 +173,17 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
+
+  &__view {
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .ice-webview-layout {
   display: flex;
 
   height: 100%;
-
-  &__view {
-    height: 100%;
-    width: 100%;
-  }
 
   &__wrap {
     flex: 1 1 50%;
