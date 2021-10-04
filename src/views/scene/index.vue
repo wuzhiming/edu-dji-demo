@@ -59,6 +59,8 @@
 
     <SceneNav
       class="ice-scene__nav"
+      :current="iFrameBridge.pageInfo.current"
+      :total="iFrameBridge.pageInfo.total"
       @previous="preClick"
       @stepBackward="firstClick"
       @next="nextClick"
@@ -69,12 +71,20 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue';
+<script lang="ts">
+import {
+  defineComponent,
+  ref,
+  reactive,
+  provide,
+  computed,
+  onMounted,
+  onUnmounted,
+} from 'vue';
 
 import MiniContainer from './mini-container.vue';
 
-import { iFrameBridge } from '@/sync/IFrameBridge';
+import { IFrameBridge, EduClientMode } from '@/sync/IFrameBridge';
 
 import SceneNav from './nav.vue';
 import SceneHeader from './header.vue';
@@ -92,7 +102,18 @@ export default defineComponent({
   setup(props, ctx) {
     const mainEl = ref(null);
     const expandedRight = ref(false);
-    const minimizeMain = ref(false);
+
+    const iFrameBridge = reactive(new IFrameBridge());
+    iFrameBridge.setup(); // after making bridge reactive, call `setup`
+
+    // const minimizeMain = ref(false);
+    const minimizeMain = computed({
+      get: () => iFrameBridge.curMode === EduClientMode.exec,
+      set: (val) => {
+        iFrameBridge.curMode =
+          val === true ? EduClientMode.exec : EduClientMode.preview;
+      },
+    });
 
     const onExpandClick = () => {
       expandedRight.value = !expandedRight.value;
@@ -116,10 +137,20 @@ export default defineComponent({
 
     const getMainEl = () => mainEl.value;
 
+    onMounted(() => {
+      // todo: pass `iframe` element into `iframeBridge`
+    });
+
+    onUnmounted(() => {
+      iFrameBridge.teardown();
+    });
+
     return {
       mainEl,
       getMainEl,
       minimizeMain,
+
+      iFrameBridge,
 
       expandedRight,
       onExpandClick,

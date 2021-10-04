@@ -1,6 +1,7 @@
 <template>
   <div class="ice-scene-nav">
     <button
+      :disabled="current <= 1"
       class="button is-text ice-scene-nav__btn"
       @click="stepBackward"
     >
@@ -8,6 +9,7 @@
     </button>
 
     <button
+      :disabled="current <= 1"
       class="button is-text ice-scene-nav__btn"
       @click="previous"
     >
@@ -19,6 +21,7 @@
     </div>
 
     <button
+      :disabled="current >= total"
       class="button is-text ice-scene-nav__btn"
       @click="next"
     >
@@ -26,6 +29,7 @@
     </button>
 
     <button
+      :disabled="current >= total"
       class="button is-text ice-scene-nav__btn"
       @click="stepForwared"
     >
@@ -113,15 +117,15 @@ export default defineComponent({
     background-color: transparent;
     color: #000;
 
-    &:focus {
+    &:focus:not(:disabled) {
       box-shadow: none !important;
     }
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: #fff;
     }
 
-    &:active {
+    &:active:not(:disabled) {
       background-color: darken(#fff, 2.5%);
     }
   }

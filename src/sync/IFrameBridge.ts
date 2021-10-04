@@ -6,8 +6,8 @@ export enum EduBridgeOperation {
 }
 
 export enum EduClientMode {
-  preview = 1,//普通的预览整个ppt的模式
-  exec//练习模式（ppt小窗的那个模式）
+  preview = 1, //普通的预览整个ppt的模式
+  exec, //练习模式（ppt小窗的那个模式）
 }
 
 export interface EduPageBridge {
@@ -19,30 +19,30 @@ export interface EduPageInit extends EduPageBridge {
   total: number; //总页数
 }
 
-export interface EduPageChange extends EduPageInit {
-}
+export interface EduPageChange extends EduPageInit {}
 
 export interface EduModeChange extends EduPageBridge {
-  mode: EduClientMode
+  mode: EduClientMode;
 }
 
-class PageInfo {
+export class PageInfo {
   current: number = 0;
   total: number = 0;
 }
 
-class IFrameBridge {
+export class IFrameBridge {
   pageInfo: PageInfo = new PageInfo();
   loaded: boolean = false;
   //当前模式
   curMode: EduClientMode = EduClientMode.preview;
 
-  constructor() {
-    this._registerEvent();
-  }
+  constructor() {}
+
+  private _messageHandler: ((...args: any[]) => void) | undefined = undefined;
 
   private _registerEvent() {
-    window.addEventListener('message', this._onMessage.bind(this));
+    this._messageHandler = this._onMessage.bind(this);
+    window.addEventListener('message', this._messageHandler);
   }
 
   private _postMessage(message: EduPageBridge) {
@@ -53,7 +53,7 @@ class IFrameBridge {
     }
   }
 
-  _onMessage(event: any) {
+  private _onMessage(event: any) {
     let data = event.data;
     if (!data.operation) return;
     const opt = data.operation;
@@ -75,6 +75,16 @@ class IFrameBridge {
       case EduBridgeOperation.modeChange:
         this.curMode = data.mode;
         break;
+    }
+  }
+
+  setup() {
+    this._registerEvent();
+  }
+
+  teardown() {
+    if (this._messageHandler) {
+      window.removeEventListener('message', this._messageHandler);
     }
   }
 
@@ -108,4 +118,4 @@ class IFrameBridge {
   }
 }
 
-export const iFrameBridge = new IFrameBridge();
+// export const iFrameBridge = new IFrameBridge();
