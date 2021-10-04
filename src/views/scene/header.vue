@@ -9,6 +9,7 @@
     </div>
 
     <button
+      v-if="minimizable"
       class="button is-small is-white tw-mr-2"
       @click="onMinimizeClick"
     >
@@ -16,13 +17,16 @@
       <FullscreenExitOutlined v-else />
     </button>
 
-    <button
-      class="button is-small is-white"
-      @click="onExpandClick"
-    >
-      <MenuFoldOutlined v-if="!expanded" />
-      <MenuUnfoldOutlined v-else />
-    </button>
+    <div class="">
+      <button
+        v-if="minimized"
+        class="button is-small is-white"
+        @click="onExpandClick"
+      >
+        <MenuFoldOutlined v-if="!expanded" />
+        <MenuUnfoldOutlined v-else />
+      </button>
+    </div>
   </header>
 </template>
 
@@ -34,6 +38,10 @@ export default defineComponent({
   components: {},
   props: {
     minimized: {
+      type: Boolean,
+      default: false,
+    },
+    minimizable: {
       type: Boolean,
       default: false,
     },

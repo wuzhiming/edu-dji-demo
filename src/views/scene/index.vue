@@ -1,8 +1,9 @@
 <template>
   <div class="ice-scene">
     <SceneHeader
-      v-model:minimized="minimizeMain"
+      v-model:minimized="minimizedMain"
       v-model:expanded="expandedRight"
+      :minimizable="minimizable"
       class="ice-scene__header"
     >
       <!--  -->
@@ -13,7 +14,7 @@
       class="ice-scene__main ice-scene-main"
     >
       <div
-        v-show="minimizeMain"
+        v-show="minimizedMain"
         class="ice-scene-webview"
       >
         <div class="ice-webview-layout">
@@ -42,7 +43,7 @@
       </div>
 
       <MiniContainer
-        v-model:minimized="minimizeMain"
+        v-model:minimized="minimizedMain"
         :get-drag-container="getMainEl"
         class="ice-scene-webview"
       >
@@ -68,6 +69,13 @@
     >
       <!--  -->
     </SceneNav>
+
+    <teleport to="body">
+      <IceLoading
+        v-show="!iFrameBridge.loaded"
+        class="ice-scene__loading"
+      />
+    </teleport>
   </div>
 </template>
 
@@ -86,6 +94,7 @@ import MiniContainer from './mini-container.vue';
 
 import { IFrameBridge, EduClientMode } from '@/sync/IFrameBridge';
 
+import IceLoading from './loading.vue';
 import SceneNav from './nav.vue';
 import SceneHeader from './header.vue';
 
@@ -95,6 +104,7 @@ export default defineComponent({
     MiniContainer,
     SceneNav,
     SceneHeader,
+    IceLoading,
   },
   props: {},
   emits: {},
@@ -107,12 +117,15 @@ export default defineComponent({
     iFrameBridge.setup(); // after making bridge reactive, call `setup`
 
     // const minimizeMain = ref(false);
-    const minimizeMain = computed({
+    const minimizedMain = computed({
       get: () => iFrameBridge.curMode === EduClientMode.exec,
       set: (val) => {
         iFrameBridge.curMode =
           val === true ? EduClientMode.exec : EduClientMode.preview;
       },
+    });
+    const minimizable = computed(() => {
+      return iFrameBridge.curMode === EduClientMode.exec;
     });
 
     const onExpandClick = () => {
@@ -148,7 +161,8 @@ export default defineComponent({
     return {
       mainEl,
       getMainEl,
-      minimizeMain,
+      minimizedMain,
+      minimizable,
 
       iFrameBridge,
 
@@ -186,6 +200,10 @@ export default defineComponent({
     left: 50%;
     transform: translate(-50%, 0);
 
+    z-index: 9;
+  }
+
+  &__loading {
     z-index: 99;
   }
 }
