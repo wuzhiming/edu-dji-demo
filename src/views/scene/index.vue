@@ -34,17 +34,19 @@
             />
           </div>
 
-          <div
-            v-show="expandedRight"
-            class="ice-webview-layout__wrap"
-            style=""
-          >
-            <iframe
-              src="https://www.cocos.com"
-              class="ice-scene-webview__view"
+          <transition name="slide">
+            <div
+              v-show="expandedRight"
+              class="ice-webview-layout__wrap"
               style=""
-            />
-          </div>
+            >
+              <iframe
+                src="https://www.cocos.com"
+                class="ice-scene-webview__view"
+                style=""
+              />
+            </div>
+          </transition>
         </div>
       </MiniContainer>
 
@@ -262,6 +264,21 @@ export default defineComponent({
     flex: 1 1 50%;
     height: 100%;
   }
+}
+
+// 展开、折叠的过渡效果
+.slide-enter-from,
+.slide-leave-to {
+  flex: 0 1 0; // fix me: 依赖于 flex 布局
+}
+.slide-enter-to,
+.slide-leave-from {
+  // flex-basis: 50%;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.25s ease;
 }
 </style>
 
