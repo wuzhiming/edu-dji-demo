@@ -5,6 +5,15 @@ module.exports = {
       nodeIntegration: true,
     },
   },
+
+  css: {
+    loaderOptions: {
+      sass: {
+        additionalData: `@use 'sass:math'; @use 'sass:color';`,
+      },
+    },
+  },
+
   configureWebpack: () => {
     const conf = {
       resolve: {

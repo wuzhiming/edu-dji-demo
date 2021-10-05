@@ -93,8 +93,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use 'sass:color';
-
 .ice-scene-nav {
   width: 372px;
   height: 68px;
