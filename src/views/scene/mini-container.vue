@@ -5,41 +5,66 @@
     :class="rootElClass"
     :style="dragElStyle"
   >
-    <slot :dragging="isDragging" />
-
-    <div
-      ref="dragEl"
-      class="mini-container__ctrl mini-container-ctrl"
+    <ResizeFrame
+      :disabled="!minimizable || !minimized"
+      :width="width"
+      :height="height"
+      :left="left"
+      :top="top"
+      class="mini-container__frame"
+      @update:height="onUpdateHeight"
+      @update:width="onUpdateWidth"
+      @update:left="onUpdateLeft"
+      @update:top="onUpdateTop"
     >
-      <button
-        class="button is-dark is-size-5 mini-container-ctrl__expand"
-        @click="onExpandClick"
-      >
-        <FullscreenOutlined />
-      </button>
-    </div>
+      <slot :dragging="isDragging" />
 
-    <teleport to="body">
       <div
-        class="mini-container-mask"
-        :style="{
-          display: isDragging ? 'block' : 'none',
-        }"
-      />
-    </teleport>
+        ref="dragEl"
+        class="mini-container__ctrl mini-container-ctrl"
+      >
+        <button
+          class="button is-dark is-size-5 mini-container-ctrl__expand"
+          @click="onExpandClick"
+        >
+          <FullscreenOutlined />
+        </button>
+      </div>
+
+      <teleport to="body">
+        <div
+          v-show="isDragging"
+          class="mini-container-mask"
+        />
+      </teleport>
+    </ResizeFrame>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, unref, onMounted } from 'vue';
+import {
+  defineComponent,
+  ref,
+  computed,
+  unref,
+  onMounted,
+  watch,
+  watchEffect,
+} from 'vue';
 import { useDraggable } from '@vueuse/core';
+
+import { defaultSize } from './util';
+
+import ResizeFrame from './resize.vue';
 
 const px = (val: number) => `${val}px`;
 const getDefaultDragContainer = () => document.body;
 
 export default defineComponent({
   name: 'MiniContainer',
-  components: {},
+  components: {
+    ResizeFrame,
+  },
   props: {
     minimized: {
       type: Boolean,
@@ -50,14 +75,24 @@ export default defineComponent({
       default: false,
     },
 
+    // todo: 整合 width, height, top, left
     // 小窗的宽、高
     width: {
       type: [Number],
-      default: 576,
+      default: defaultSize.width,
     },
     height: {
       type: [Number],
-      default: 324,
+      default: defaultSize.height,
+    },
+
+    top: {
+      type: [Number],
+      default: 0,
+    },
+    left: {
+      type: [Number],
+      default: 0,
     },
 
     getDragContainer: {
@@ -67,6 +102,12 @@ export default defineComponent({
   },
   emits: {
     'update:minimized': null,
+
+    'update:width': null,
+    'update:height': null,
+
+    'update:top': null,
+    'update:left': null,
   },
 
   setup(props, ctx) {
@@ -109,13 +150,26 @@ export default defineComponent({
       isDragging,
     } = useDraggable(dragEl, {
       initialValue: {
-        x: 0,
-        y: 0,
+        x: Number.isFinite(props.left) ? props.left : 0,
+        y: Number.isFinite(props.top) ? props.top : 0,
       },
 
       onStart: (pos, e) => {
         calcPositionLimits();
       },
+
+      onMove: (pos, e) => {
+        ctx.emit('update:left', pos.x);
+        ctx.emit('update:top', pos.y);
+      },
+    });
+
+    // fix me: can we remove this watch ?
+    watch([() => props.left, () => props.top], ([x, y]) => {
+      position.value = {
+        x,
+        y,
+      };
     });
 
     const rootElClass = computed(() => {
@@ -151,6 +205,26 @@ export default defineComponent({
       return {};
     });
 
+    // resize frame
+    const onUpdateWidth = (val: number) => {
+      ctx.emit('update:width', val);
+    };
+    const onUpdateHeight = (val: number) => {
+      ctx.emit('update:height', val);
+    };
+    const onUpdateLeft = (val: number) => {
+      position.value = {
+        ...position.value,
+        x: val,
+      };
+    };
+    const onUpdateTop = (val: number) => {
+      position.value = {
+        ...position.value,
+        y: val,
+      };
+    };
+
     const onExpandClick = () => {
       ctx.emit('update:minimized', false);
     };
@@ -170,6 +244,11 @@ export default defineComponent({
       dragElStyle,
 
       onExpandClick,
+
+      onUpdateWidth,
+      onUpdateHeight,
+      onUpdateLeft,
+      onUpdateTop,
     };
   },
 });
@@ -177,7 +256,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 $prefixCls: mini-container;
-$z-index: 2;
+$z-index: 1;
 
 .#{$prefixCls} {
   // position: relative;
@@ -232,6 +311,11 @@ $z-index: 2;
       padding: 8px;
       height: auto;
     }
+  }
+
+  &__frame {
+    height: 100%;
+    width: 100%;
   }
 }
 </style>

@@ -15,6 +15,10 @@
     >
       <MiniContainer
         v-model:minimized="minimizedSub"
+        v-model:width="miniStyle.width"
+        v-model:height="miniStyle.height"
+        v-model:left="miniStyle.x"
+        v-model:top="miniStyle.y"
         :minimizable="minimizable"
         :get-drag-container="getMainEl"
         class="ice-scene-webview"
@@ -46,6 +50,10 @@
 
       <MiniContainer
         v-model:minimized="minimizedMain"
+        v-model:width="miniStyle.width"
+        v-model:height="miniStyle.height"
+        v-model:left="miniStyle.x"
+        v-model:top="miniStyle.y"
         :minimizable="minimizable"
         :get-drag-container="getMainEl"
         class="ice-scene-webview"
@@ -97,6 +105,8 @@ import MiniContainer from './mini-container.vue';
 
 import { IFrameBridge, EduClientMode } from '@/sync/IFrameBridge';
 
+import { defaultSize } from './util';
+
 import IceLoading from './loading.vue';
 import SceneNav from './nav.vue';
 import SceneHeader from './header.vue';
@@ -119,12 +129,18 @@ export default defineComponent({
     const iFrameBridge = reactive(new IFrameBridge());
     iFrameBridge.setup(); // after making bridge reactive, call `setup`
 
-    const minimizedMain = ref(false);
+    const minimizedMain = ref(true);
     const minimizedSub = computed({
       get: () => !minimizedMain.value,
       set: (val) => {
         minimizedMain.value = !val;
       },
+    });
+    const miniStyle = ref({
+      width: defaultSize.width,
+      height: defaultSize.height,
+      x: 0,
+      y: 0,
     });
 
     const minimizable = computed(() => {
@@ -165,6 +181,7 @@ export default defineComponent({
       mainEl,
       getMainEl,
 
+      miniStyle,
       minimizedMain,
       minimizedSub,
       minimizable,
@@ -197,6 +214,8 @@ export default defineComponent({
     flex: 1;
     min-width: 0;
     min-height: 0;
+
+    position: relative;
   }
 
   &__nav {
@@ -205,7 +224,7 @@ export default defineComponent({
     left: 50%;
     transform: translate(-50%, 0);
 
-    z-index: 9;
+    z-index: 1;
   }
 
   &__loading {
