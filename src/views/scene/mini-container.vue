@@ -45,6 +45,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    minimizable: {
+      type: Boolean,
+      default: false,
+    },
 
     // 小窗的宽、高
     width: {
@@ -116,13 +120,13 @@ export default defineComponent({
 
     const rootElClass = computed(() => {
       return {
-        minimized: props.minimized,
+        minimized: props.minimizable && props.minimized,
         dragging: isDragging.value,
       };
     });
 
     const dragElStyle = computed(() => {
-      if (props.minimized || isDragging.value) {
+      if (props.minimizable && (props.minimized || isDragging.value)) {
         const pos = unref(position);
         const limits = unref(dragPosLimits);
 

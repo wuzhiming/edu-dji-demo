@@ -8,18 +8,20 @@
       {{ title }}
     </div>
 
-    <button
+    <!-- <button
       v-if="minimizable"
       class="button is-small is-white tw-mr-2"
       @click="onMinimizeClick"
     >
       <FullscreenOutlined v-if="minimized" />
       <FullscreenExitOutlined v-else />
-    </button>
+    </button> -->
 
-    <div class="">
+    <div
+      v-if="minimizable"
+      class=""
+    >
       <button
-        v-if="minimized"
         class="button is-small is-white"
         @click="onExpandClick"
       >

@@ -13,8 +13,10 @@
       ref="mainEl"
       class="ice-scene__main ice-scene-main"
     >
-      <div
-        v-show="minimizedMain"
+      <MiniContainer
+        v-model:minimized="minimizedSub"
+        :minimizable="minimizable"
+        :get-drag-container="getMainEl"
         class="ice-scene-webview"
       >
         <div class="ice-webview-layout">
@@ -40,10 +42,11 @@
             />
           </div>
         </div>
-      </div>
+      </MiniContainer>
 
       <MiniContainer
         v-model:minimized="minimizedMain"
+        :minimizable="minimizable"
         :get-drag-container="getMainEl"
         class="ice-scene-webview"
       >
@@ -116,14 +119,14 @@ export default defineComponent({
     const iFrameBridge = reactive(new IFrameBridge());
     iFrameBridge.setup(); // after making bridge reactive, call `setup`
 
-    // const minimizeMain = ref(false);
-    const minimizedMain = computed({
-      get: () => iFrameBridge.curMode === EduClientMode.exec,
+    const minimizedMain = ref(false);
+    const minimizedSub = computed({
+      get: () => !minimizedMain.value,
       set: (val) => {
-        iFrameBridge.curMode =
-          val === true ? EduClientMode.exec : EduClientMode.preview;
+        minimizedMain.value = !val;
       },
     });
+
     const minimizable = computed(() => {
       return iFrameBridge.curMode === EduClientMode.exec;
     });
@@ -161,7 +164,9 @@ export default defineComponent({
     return {
       mainEl,
       getMainEl,
+
       minimizedMain,
+      minimizedSub,
       minimizable,
 
       iFrameBridge,
