@@ -91,6 +91,10 @@ app.on('ready', async () => {
 });
 
 // Exit cleanly on request from parent process in development mode.
+app.on('window-all-closed',()=>{
+  app.quit();
+});
+
 if (isDevelopment) {
   if (process.platform === 'win32') {
     process.on('message', (data) => {

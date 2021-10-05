@@ -1,6 +1,6 @@
 {
   "name": "edu-eji-demo",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,7 +10,30 @@
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve --mode development",
     "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps"
+    "postuninstall": "electron-builder install-app-deps",
+    "release:win": "electron-builder --win --x64 ",
+    "release:mac": "electron-builder --mac"
+  },
+  "development": {
+    "build": {
+      "appId": "com.cocos.cocosice",
+      "electronVersion": "11.2.0",
+      "productName": "Cocos ICE Simulator",
+      "mac": {
+        "icon": "ice.icns",
+        "target": [
+          "dmg"
+        ]
+      },
+      "win": {
+        "asar": true,
+        "asarUnpack": "static",
+        "icon": "ice.ico",
+        "target": [
+          "zip"
+        ]
+      }
+    }
   },
   "main": "background.js",
   "dependencies": {
