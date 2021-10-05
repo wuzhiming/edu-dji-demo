@@ -3,7 +3,7 @@
     <!-- ice loading -->
     <div class="ice-loading__logo">
       <img
-        src="/ice-logo.svg"
+        src="@/assets/ice-logo.svg"
         alt="logo"
       >
       <div class="ice-loading__text">

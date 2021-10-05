@@ -29,6 +29,6 @@ const app = createApp(App);
   CaretRightOutlined,
   FullscreenOutlined,
   FullscreenExitOutlined,
-].forEach((comp) => app.component(comp.name, comp));
+].forEach((comp) => app.component(comp.displayName, comp));
 
 app.mount('#app');
