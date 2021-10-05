@@ -28,8 +28,8 @@ function createWindow() {
     .ELECTRON_NODE_INTEGRATION as unknown as boolean;
 
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -38,8 +38,8 @@ function createWindow() {
       webviewTag: true,
     },
 
-    minWidth: 640,
-    minHeight: 480,
+    minWidth: 1024,
+    minHeight: 576,
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {

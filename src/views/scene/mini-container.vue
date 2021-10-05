@@ -49,11 +49,11 @@ export default defineComponent({
     // 小窗的宽、高
     width: {
       type: [Number],
-      default: 500,
+      default: 576,
     },
     height: {
       type: [Number],
-      default: 300,
+      default: 324,
     },
 
     getDragContainer: {
