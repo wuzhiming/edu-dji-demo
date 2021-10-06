@@ -3,6 +3,23 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       nodeIntegration: true,
+      productName: "Cocos ICE Simulator",
+      "appId": "com.cocos.cocosice",
+      "electronVersion": "11.2.0",
+      "mac": {
+        "icon": "ice.icns",
+        "target": [
+          "dmg"
+        ]
+      },
+      "win": {
+        "asar": true,
+        "asarUnpack": "static",
+        "icon": "ice.ico",
+        "target": [
+          "zip"
+        ]
+      }
     },
   },
 

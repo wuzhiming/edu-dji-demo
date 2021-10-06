@@ -1,5 +1,5 @@
 {
-  "name": "edu-eji-demo",
+  "name": "edu-dji-demo",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -13,27 +13,6 @@
     "postuninstall": "electron-builder install-app-deps",
     "release:win": "electron-builder --win --x64 ",
     "release:mac": "electron-builder --mac"
-  },
-  "development": {
-    "build": {
-      "appId": "com.cocos.cocosice",
-      "electronVersion": "11.2.0",
-      "productName": "Cocos ICE Simulator",
-      "mac": {
-        "icon": "ice.icns",
-        "target": [
-          "dmg"
-        ]
-      },
-      "win": {
-        "asar": true,
-        "asarUnpack": "static",
-        "icon": "ice.ico",
-        "target": [
-          "zip"
-        ]
-      }
-    }
   },
   "main": "background.js",
   "dependencies": {
