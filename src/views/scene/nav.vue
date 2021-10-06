@@ -57,7 +57,7 @@ export default defineComponent({
   },
   emits: {
     next: null,
-    stepForwared: null,
+    stepForward: null,
 
     previous: null,
     stepBackward: null,
@@ -73,7 +73,7 @@ export default defineComponent({
     };
 
     const stepForwared = () => {
-      ctx.emit('stepForwared');
+      ctx.emit('stepForward');
     };
 
     const stepBackward = () => {
