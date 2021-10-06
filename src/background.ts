@@ -46,7 +46,7 @@ function createWindow() {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
-    // if (!process.env.IS_TEST) win.webContents.openDevTools();
+    if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol('app');
     // Load the index.html when not in development
@@ -56,10 +56,13 @@ function createWindow() {
   win.on('closed', () => {
     win = null;
   });
-  win.on('ready-to-show',()=>{
-    win?.show();
-    win?.maximize();
-  })
+  win.on('ready-to-show', () => {
+    //todo:如果样式加载问题解决不了就先这样做
+    setTimeout(() => {
+      win?.show();
+      win?.maximize();
+    }, 400);
+  });
 }
 
 // Quit when all windows are closed.
