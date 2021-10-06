@@ -55,7 +55,7 @@ export default defineComponent({
 
     title: {
       type: String,
-      default: 'Title',
+      default: 'Cocos ICE 一体化 3D 教学 Demo',
     },
   },
   emits: {
